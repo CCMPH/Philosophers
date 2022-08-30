@@ -11,20 +11,28 @@
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include <stdlib.h> //nodig voor exit_failure
+#include <stdio.h> //nodig voor printf
+
+// int	initialize_args(int ac, char **av, t_data *data)
+// {
+
+// }
 
 int main(int ac, char **av)
 {
-	t_data	*data;
-	//t_philo	*philo;
+	//t_data	*data;
 
 	if (ac < 5 || ac > 6)
-		return (error_msg("Wrong amount of arguments"));
-	//if (initialize_args(ac, av, &data, &philo));
-	if (initialize_args(ac, av, &data));
-		return (1);
+		return (error_msg(STR_ERR_INPUT_AMMOUNT, NULL, EXIT_FAILURE));
+	if(!is_input_valid(ac, av))
+		return(EXIT_FAILURE);
+	
+	// if (initialize_args(ac, av, &data));
+	// 	return (1);
+	printf("succes\n");
 	return (0);
 }
 
 // to do:
-// errormsg aanpassen naar so_long variant
-// initialize functie verder maken + checks
+// initialize functie verder maken
