@@ -17,7 +17,7 @@ static bool is_input_a_digit(char *str)
 	return (true);
 }
 
-static int	convert_str_to_int(char *str)
+int	convert_str_to_int(char *str)
 {
 	unsigned long	nb;
 	int				i;
