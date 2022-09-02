@@ -30,10 +30,10 @@ typedef struct s_data {
 
 typedef struct s_philo {
 	unsigned int	id_philo;
-	// unsigned int	times_eaten;
-	// unsigned int	last_eaten;
-	// unsigned int	left_fork;
-	// unsigned int	right_fork;
+	unsigned int	times_eaten;
+	unsigned long	last_eaten;
+	pthread_mutex_t	left_fork;
+	pthread_mutex_t	right_fork;
 	t_data			*data;
 }	t_philo;
 
