@@ -48,6 +48,7 @@ static int	init_philosophers(t_data *data, t_philo *philo)
 	unsigned int	i;
 
 	philo = malloc(sizeof(*philo) * data->nr_of_philos);
+	// twijfel moet dit met die fork hier?
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nr_of_philos);
 	if (!philo || !data->forks)
 		return (error_msg(STR_ERR_MALLOC, NULL, EXIT_FAILURE));
@@ -76,10 +77,10 @@ static int	init_data(char **av, t_data *data)
 	if (av[5])
 		data->times_must_eat = convert_str_to_int(av[5]);
 	else
-		data->times_must_eat = 0;
+		data->times_must_eat = -1;
 	data->start_time = get_time();
 	//data->status = dead or alive;
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	initialize(t_data *data, t_philo *philo, char **av)
