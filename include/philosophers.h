@@ -27,6 +27,11 @@
 # define STR_ERR_MAX_INT	"%s Arguments can't be bigger than MAX_INT.\n"
 # define STR_ERR_MALLOC	"%s Malloc went wrong.\n"
 
+typedef enum	e_status {
+	ALIVE = 0,
+	DEAD = 1,
+}			t_status
+
 typedef struct s_data {
 	unsigned int	nr_of_philos;
 	unsigned int	time_to_die;
@@ -34,6 +39,8 @@ typedef struct s_data {
 	unsigned int	time_to_sleep;
 	unsigned int	times_must_eat;
 	unsigned long	start_time;
+	pthread_t		*threads;
+	t_status		status;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	lock_write;
 	pthread_mutex_t	lock_philo_dead;
@@ -61,5 +68,6 @@ int				convert_str_to_int(char *str);
 
 // INIT //
 int				initialize(t_data *data, t_philo *philo, char **av);
+int				init_philosophers(t_data *data, t_philo *philo);
 
 #endif

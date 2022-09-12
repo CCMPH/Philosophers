@@ -11,7 +11,30 @@
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include "../include/philosophers.h"
 #include <stdlib.h> //nodig voor exit_failure
+
+int	init_philosophers(t_data *data, t_philo *philo)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < data->nr_of_philos)
+	{
+		philo[i].id_philo = i + 1;
+		philo[i].times_eaten = 0;
+		philo[i].last_eaten = get_time();
+		philo[i].data = data;
+		philo[i].left_fork = data->forks[i];
+		philo[i].right_fork = data->forks[(i + 1) % data->nr_of_philos];
+		// kijken of vorken anders verdeeld moeten worden - asign forks
+		if (pthread_create(&data->threads[i], NULL, &simulation, (void *)&philo[i]))
+			return (EXIT_FAILURE);
+		//is cast naar void nodig?
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
 
 static int	init_mutexes(t_data *data)
 {
@@ -43,30 +66,6 @@ static int	init_mutexes(t_data *data)
 	return (0);
 }
 
-static int	init_philosophers(t_data *data, t_philo *philo)
-{
-	unsigned int	i;
-
-	philo = malloc(sizeof(*philo) * data->nr_of_philos);
-	// twijfel moet dit met die fork hier?
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->nr_of_philos);
-	if (!philo || !data->forks)
-		return (error_msg(STR_ERR_MALLOC, NULL, EXIT_FAILURE));
-	// kijken naar errormsg, ik denk lek als 1e goed gaat, 2e niet
-	i = 0;
-	while (i < data->nr_of_philos)
-	{
-		philo[i].id_philo = i + 1;
-		philo[i].times_eaten = 0;
-		philo[i].last_eaten = get_time();
-		philo[i].data = data;
-		philo[i].left_fork = data->forks[i];
-		philo[i].right_fork = data->forks[(i + 1) % data->nr_of_philos];
-		i++;
-	}
-	return (0);
-}
-
 static int	init_data(char **av, t_data *data)
 {
 	data->nr_of_philos = convert_str_to_int(av[1]);
@@ -76,18 +75,14 @@ static int	init_data(char **av, t_data *data)
 	data->times_must_eat = -1;
 	if (av[5])
 		data->times_must_eat = convert_str_to_int(av[5]);
-	else
-		data->times_must_eat = -1;
 	data->start_time = get_time();
-	//data->status = dead or alive;
+	data->status = ALIVE;
 	return (EXIT_SUCCESS);
 }
 
-int	initialize(t_data *data, t_philo *philo, char **av)
+int	initialize(t_data *data, char **av)
 {
 	if (init_data(av, data))
-		return (EXIT_FAILURE);
-	if (init_philosophers(data, philo))
 		return (EXIT_FAILURE);
 	if (init_mutexes(data))
 		return (EXIT_FAILURE);

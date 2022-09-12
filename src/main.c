@@ -11,62 +11,101 @@
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include "../include/philosophers.h"
 #include <stdlib.h> //nodig voor exit_failure
 #include <stdio.h> //nodig voor printf
+#include <unistd.h> //nodig voor usleep
 
+// ipv 500 laten slapen, functie uitbreiden zodat hij preciezer is
 // void	philo_think(t_philo *philo)
 // {
 // 	//dit nog uitwerken met hoe lang moet iemand denken. 
 // 	//verschillende senarios uitdenken. 
 // }
 
-// void	*simulation(void *data)
-// {
-// 	t_philo	*philo;
+void	philo_print()
+{
 
-// 	philo = (t_philo *)data;
-// 	if (philo->data->nr_of_philos == 1)
-// 	{
-// 		//functie voor als input 1 is
-// 		return(0);
-// 	}
-// 	//even philos beginnen met denken
-// 	else if (philo->id_philo % 2)
-// 		philo_think(philo);
-// }
+}
 
-// int create_threads(t_data *data, t_philo *philo)
-// {
-// 	int	i;
-// 	pthread_t	thread_id[200];
+bool	check_forks(t_philo *philo, int left_fork, int right_fork)
+{
+	if (left_fork == right_fork)
+		return (false);
+	phtread_mutex_lock(&philo->data->forks[right_fork]);
+	// check of is dood??
+	philo_print();
+	// VERDER MET PHILO PRINT EN DE SIMULATION
+}
 
-// 	i = 0;
-// 	while (i < data->nr_of_philos)
-// 	{
-// 		if (pthread_create(thread_id, NULL, &simulation, &philo[i]))
-// 			return (EXIT_FAILURE);
-// 		i++;
-// 	}
-// 	//nog een tread maken voor een supervisor?
-// 	// nog joinen ook
-// 	return (0);
-// }
+
+void	philo_eat(t_philo *philo)
+{
+	if (check_forks(philo, philo->left_fork, philo->right_fork))
+		return ;
+	
+}
+
+
+void	*simulation(void *philosopher)
+{
+	t_philo	*philo;
+	t_data	*data;
+
+	philo = (t_philo *)philosopher;
+	data = philo->data;
+	if (philo->id_philo % 2)
+		usleep(500);
+	//printf("Philo id: %d\n", philo->id_philo);
+	while (data->status != DEAD && philo->times_eaten != data->times_must_eat)
+	{
+		//philo_print
+		philo_eat(philo);
+	}
+	return (0);
+}
+
+int	join_threads(t_data *data)
+{
+	unsigned i;
+
+	i = 0;
+	while (i < data->nr_of_philos)
+	{
+		pthread_join(data->threads[i], NULL);
+		//error management toepassen hiero
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
+
+int start_simulation(t_data *data)
+{
+	t_philo		*philo;
+
+	philo = malloc(sizeof(*philo) * data->nr_of_philos);
+	if (!philo)
+		return (error_msg(STR_ERR_MALLOC, NULL, EXIT_FAILURE));
+	init_philosophers(data, philo);
+	join_threads(data);
+	//nog een tread maken voor een supervisor?
+	// boel opschonen
+	return (0);
+}
 
 int	main(int ac, char **av)
 {
 	t_data	data;
-	t_philo	*philo;
 
-	philo = NULL;
 	if (ac < 5 || ac > 6)
 		return (error_msg(STR_ERR_INPUT_AMMOUNT, NULL, EXIT_FAILURE));
 	if (!is_input_valid(ac, av))
 		return (EXIT_FAILURE);
-	if (initialize(&data, philo, av))
+	if (initialize(&data, av))
 		return (EXIT_FAILURE);
-	// if (create_threads(&data, philo))
-	// 	return (EXIT_FAILURE);
-	//start_simulation
+	if (start_simulation(&data))
+		return (EXIT_FAILURE);
 	//stop_simulation
 	printf("succes\n");
 	return (0);
