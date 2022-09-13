@@ -14,27 +14,6 @@
 #include "../include/philosophers.h"
 #include <stdlib.h> //nodig voor exit_failure
 
-int	init_philosophers(t_data *data, t_philo *philo)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < data->nr_of_philos)
-	{
-		philo[i].id_philo = i + 1;
-		philo[i].times_eaten = 0;
-		philo[i].last_eaten = get_time();
-		philo[i].data = data;
-		philo[i].left_fork = data->forks[i];
-		philo[i].right_fork = data->forks[(i + 1) % data->nr_of_philos];
-		// kijken of vorken anders verdeeld moeten worden - asign forks
-		if (pthread_create(&data->threads[i], NULL, &simulation, (void *)&philo[i]))
-			return (EXIT_FAILURE);
-		//is cast naar void nodig?
-		i++;
-	}
-	return (EXIT_SUCCESS);
-}
 
 static int	init_mutexes(t_data *data)
 {
@@ -76,7 +55,7 @@ static int	init_data(char **av, t_data *data)
 	if (av[5])
 		data->times_must_eat = convert_str_to_int(av[5]);
 	data->start_time = get_time();
-	data->status = ALIVE;
+	data->dead = false;
 	return (EXIT_SUCCESS);
 }
 

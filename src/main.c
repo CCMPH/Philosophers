@@ -23,44 +23,63 @@
 // 	//verschillende senarios uitdenken. 
 // }
 
-void	philo_print()
+void	philo_print(t_philo *philo, char *str)
 {
+	unsigned long	time;
 
+	pthread_mutex_lock(&philo->data->lock_write);
+	// iets maken wanneer simulatie is gestopt zodat niet blijft doorschrijven.
+	time = get_time();
+	printf("%ld %d %s\n", time - philo->data->start_time, philo->id_philo, str);
+	pthread_mutex_unlock(&philo->data->lock_write);
 }
 
-bool	check_forks(t_philo *philo, int left_fork, int right_fork)
+void	time_action(unsigned long time_action)
 {
-	if (left_fork == right_fork)
-		return (false);
-	phtread_mutex_lock(&philo->data->forks[right_fork]);
-	// check of is dood??
-	philo_print();
-	// VERDER MET PHILO PRINT EN DE SIMULATION
-}
+	unsigned long	start;
 
+	start = get_time();
+	while (get_time() - start < time_action)
+		usleep(10);
+}
 
 void	philo_eat(t_philo *philo)
 {
-	if (check_forks(philo, philo->left_fork, philo->right_fork))
-		return ;
-	
+	// if (philo->data->dead == true || philo->times_eaten == philo->data->times_must_eat)
+	// 	return ; twijfel of dit nodig is
+	pthread_mutex_lock(&philo->left_fork);
+	philo_print(philo, "has taken a fork");
+	pthread_mutex_lock(&philo->right_fork);
+	philo_print(philo, "has taken a fork");
+	pthread_mutex_lock(&philo->lock_meal_time);
+	philo_print(philo, "is eating");
+	philo->last_eaten = get_time();
+	philo->times_eaten++;
+	pthread_mutex_unlock(&philo->lock_meal_time);
+	time_action(philo->data->time_to_eat);
+	pthread_mutex_unlock(&philo->left_fork);
+	pthread_mutex_unlock(&philo->right_fork);
 }
 
+void	philo_sleep(t_philo *philo)
+{
+	philo_print(philo, "is sleeping");
+	time_action(philo->data->time_to_sleep);
+}
 
 void	*simulation(void *philosopher)
 {
 	t_philo	*philo;
-	t_data	*data;
 
 	philo = (t_philo *)philosopher;
-	data = philo->data;
 	if (philo->id_philo % 2)
 		usleep(500);
-	//printf("Philo id: %d\n", philo->id_philo);
-	while (data->status != DEAD && philo->times_eaten != data->times_must_eat)
+	while (philo->data->dead != true && philo->times_eaten != philo->data->times_must_eat)
 	{
-		//philo_print
+		philo_print(philo, "is thinking");
 		philo_eat(philo);
+		philo_sleep(philo);
+		// wanneer eat max bereikt, gaan we dan nog slapen? zo ja, hier iets extra maken en hoe zit dit met dood gaan?
 	}
 	return (0);
 }
@@ -76,7 +95,55 @@ int	join_threads(t_data *data)
 		//error management toepassen hiero
 		i++;
 	}
+	pthread_join(data->check_stop_sim, NULL);
 	return (EXIT_SUCCESS);
+}
+
+int	init_philosophers(t_data *data, t_philo *philo)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < data->nr_of_philos)
+	{
+		philo[i].id_philo = i + 1;
+		philo[i].times_eaten = 0;
+		philo[i].last_eaten = get_time();
+		philo[i].data = data;
+		philo[i].left_fork = data->forks[i];
+		philo[i].right_fork = data->forks[(i + 1) % data->nr_of_philos];
+		// kijken of vorken anders verdeeld moeten worden - asign forks
+		if (pthread_create(&data->threads[i], NULL, &simulation, (void *)&philo[i]))
+			return (EXIT_FAILURE);
+		//is cast naar void nodig?
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}
+
+void	*supervisor(void *philosopher)
+{
+	t_philo	*philo;
+	unsigned int	i;
+	unsigned long	time;
+
+	philo = (t_philo *)philosopher;
+	i = 0;
+	while (i < philo->data->nr_of_philos)
+	{
+		time = get_time();
+		if (time - philo[i].last_eaten >= philo->data->time_to_die)
+		{
+			pthread_mutex_lock(&philo->data->lock_philo_dead);
+			philo->data->dead = true;
+			philo_print(philo, "died");
+			pthread_mutex_unlock(&philo->data->lock_philo_dead);
+			break;
+		}
+		i++;
+		if (i == philo->data->nr_of_philos)
+			i = 0;
+	}
 }
 
 
@@ -88,9 +155,9 @@ int start_simulation(t_data *data)
 	if (!philo)
 		return (error_msg(STR_ERR_MALLOC, NULL, EXIT_FAILURE));
 	init_philosophers(data, philo);
+	pthread_create(&data->check_stop_sim, NULL, &supervisor, (void *)&philo);
 	join_threads(data);
-	//nog een tread maken voor een supervisor?
-	// boel opschonen
+	// boel opschonen ??
 	return (0);
 }
 
@@ -106,7 +173,7 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	if (start_simulation(&data))
 		return (EXIT_FAILURE);
-	//stop_simulation
+	//stop_simulation - boel opschonen??
 	printf("succes\n");
 	return (0);
 }
