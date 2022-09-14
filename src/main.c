@@ -144,6 +144,7 @@ void	*supervisor(void *philosopher)
 		if (i == philo->data->nr_of_philos)
 			i = 0;
 	}
+	return (0);
 }
 
 

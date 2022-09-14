@@ -13,35 +13,40 @@
 #include "philosophers.h"
 #include "../include/philosophers.h"
 #include <stdlib.h> //nodig voor exit_failure
+#include <stdio.h> //nodig voor printf
 
+void	mutex_clean(t_data *data)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < data->nr_of_philos)
+	{
+		pthread_mutex_destroy(&data->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&data->lock_write);
+	pthread_mutex_destroy(&data->lock_philo_dead);
+}
 
 static int	init_mutexes(t_data *data)
 {
 	unsigned int	i;
 
-	i = 0;	
+	i = 0;
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->nr_of_philos);
+	if (!data->forks)
+		return (1);
 	while (i < data->nr_of_philos)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL))
-		{
-			//functie die de boel delete mutex_destroy
-			//kijken naar de error message
 			return (1);
-		}
 		i++;
 	}
-	if (pthread_mutex_init(&data->lock_philo_dead, NULL))
-	{
-		//functie die de boel delete mutex_destroy
-		//kijken naar de error message
-		return (1);
-	}
 	if (pthread_mutex_init(&data->lock_write, NULL))
-	{
-		//functie die de boel delete mutex_destroy
-		//kijken naar de error message
 		return (1);
-	}
+	if (pthread_mutex_init(&data->lock_philo_dead, NULL))
+		return (1);
 	return (0);
 }
 
@@ -64,6 +69,11 @@ int	initialize(t_data *data, char **av)
 	if (init_data(av, data))
 		return (EXIT_FAILURE);
 	if (init_mutexes(data))
+	{
+		if(data->forks)
+			free(data->forks);
+		mutex_clean(data);
 		return (EXIT_FAILURE);
+	}
 	return (EXIT_SUCCESS);
 }

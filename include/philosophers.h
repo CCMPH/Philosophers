@@ -34,9 +34,9 @@ typedef struct s_data {
 	unsigned int	time_to_sleep;
 	unsigned int	times_must_eat;
 	unsigned long	start_time;
+	bool			dead;
 	pthread_t		*threads;
 	pthread_t		check_stop_sim;
-	bool			dead;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	lock_write;
 	pthread_mutex_t	lock_philo_dead;
