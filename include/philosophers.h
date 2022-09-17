@@ -13,58 +13,50 @@
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
+#include <stdlib.h> //nodig voor exit_failure
+#include <stdio.h> //nodig voor printf
 #include <stdbool.h> //nodig voor bool
-#include <pthread.h> //nodig voor pthread
+#include <limits.h> //nodig voor int_MAX
+# include <pthread.h> //nodig voor pthread functies
 
 # define MAX_PHILOS	200
+typedef struct s_philo	t_philo;
+typedef struct s_data	t_data;
 
-# define STR_ERROR	"Error:"
-# define STR_ERR_INPUT_AMMOUNT	"%s Wrong amount of arguments\n"
-# define STR_ERR_INPUT_DIGIT	"%s invalid input:[%s] \
-	Input contains not only digits.\n"
-# define STR_ERR_PHILO	"%s There must be between 1 and 200 philosophers.\n"
-# define STR_ERR_ARG_ZERO	"%s Arguments can't be zero.\n"
-# define STR_ERR_MAX_INT	"%s Arguments can't be bigger than MAX_INT.\n"
-# define STR_ERR_MALLOC	"%s Malloc went wrong.\n"
+struct s_data {
+int				nr_philos;
+int				time_to_die;
+int				time_to_eat;
+int				time_to_sleep;
+int				times_must_eat;
+long			start_time;
+bool			dead;
 
-typedef struct s_data {
-	unsigned int	nr_of_philos;
-	unsigned int	time_to_die;
-	unsigned int	time_to_eat;
-	unsigned int	time_to_sleep;
-	unsigned int	times_must_eat;
-	unsigned long	start_time;
-	bool			dead;
-	pthread_t		*threads;
-	pthread_t		check_stop_sim;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	lock_write;
-	pthread_mutex_t	lock_philo_dead;
-}	t_data;
+pthread_mutex_t	*forks;
+pthread_mutex_t	lock_write;
+pthread_mutex_t	lock_check_dead;
 
-typedef struct s_philo {
-	unsigned int	id_philo;
-	unsigned int	times_eaten;
-	unsigned long	last_eaten;
-	pthread_mutex_t	left_fork;
-	pthread_mutex_t	right_fork;
-	pthread_mutex_t	lock_meal_time;
-	t_data			*data;
-}	t_philo;
+t_philo			*philo;
+};
+
+struct s_philo {
+t_data	*data;
+int		philo_id;
+int		times_eaten;
+long	time_last_meal;
+int		fork_left;
+int		fork_right;
+
+};
+
+
+// CHECK INPUT //
+bool	is_input_valid(int ac, char **av);
 
 // ERROR //
-int				error_msg(char *str, char *extra_msg, int exit_nr);
-void			*error_null(char *str, char *extra_msg);
-
-// CHECKS //
-bool			is_input_valid(int ac, char **av);
+int	error_msg(char *str, int exit_nr);
 
 // UTILS //
-unsigned long	get_time(void);
-int				convert_str_to_int(char *str);
-
-// INIT //
-int				initialize(t_data *data, char **av);
-int				init_philosophers(t_data *data, t_philo *philo);
+int	convert_str_to_int(char *str);
 
 #endif

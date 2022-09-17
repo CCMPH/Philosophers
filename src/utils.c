@@ -10,18 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
-#include <sys/time.h>
-#include <limits.h> //nodig voor int_MAX
-
-unsigned long	get_time(void)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	// als het mis gaat. Protecten
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
+#include "../include/philosophers.h"
 
 int	convert_str_to_int(char *str)
 {

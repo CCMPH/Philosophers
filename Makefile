@@ -14,9 +14,9 @@ NAME = philo
 
 CC = gcc
 RM = rm -rf
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread
 #-g -fsanitize=address
-#-g -fsanitizer=thread
+#-g -fsanitize=thread
 
 INC = -I ./include
 
