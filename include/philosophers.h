@@ -17,7 +17,10 @@
 #include <stdio.h> //nodig voor printf
 #include <stdbool.h> //nodig voor bool
 #include <limits.h> //nodig voor int_MAX
-# include <pthread.h> //nodig voor pthread functies
+#include <pthread.h> //nodig voor pthread functies
+#include <sys/time.h> //nodig voor gettimeofday
+#include <unistd.h> //nodig voor usleep
+
 
 # define MAX_PHILOS	200
 typedef struct s_philo	t_philo;
@@ -53,10 +56,17 @@ int		fork_right;
 // CHECK INPUT //
 bool	is_input_valid(int ac, char **av);
 
+// INITIALIZE //
+int	initialize(t_data *data, char **av);
+
 // ERROR //
 int	error_msg(char *str, int exit_nr);
+int	error_free_data(t_data *data);
+bool	destroy_mutex_forks(t_data *data, int index, bool info);
+bool	destroy_mutex_write_and_fork(t_data *data, int index, bool info);
 
 // UTILS //
 int	convert_str_to_int(char *str);
+long	get_time(void);
 
 #endif
