@@ -32,6 +32,7 @@ int				time_to_die;
 int				time_to_eat;
 int				time_to_sleep;
 int				times_must_eat;
+int				philos_done_eating;
 long			start_time;
 bool			dead;
 
@@ -43,12 +44,14 @@ t_philo			*philo;
 };
 
 struct s_philo {
-t_data	*data;
-int		philo_id;
-int		times_eaten;
-long	time_last_meal;
-int		fork_left;
-int		fork_right;
+t_data*			data;
+int				philo_id;
+int				times_eaten;
+long			time_last_meal;
+bool			done_eating;
+int				fork_left;
+int				fork_right;
+pthread_mutex_t lock_eating;
 
 };
 

@@ -23,6 +23,7 @@ static bool	init_data(t_data *data, char **av)
 	data->times_must_eat = -1;
 	if (av[5])
 		data->times_must_eat = convert_str_to_int(av[5]);
+	data->philos_done_eating = 0;
 	data->start_time = get_time();
 	data->dead = false;
 	return (true);
@@ -56,6 +57,9 @@ static bool	init_philosopher(t_data *data)
 		data->philo[i].times_eaten = 0;
 		data->philo[i].time_last_meal = 0;
 		asign_forks(&data->philo[i]);
+		if (pthread_mutex_init(&data->philo[i].lock_eating, NULL))
+			return (false);
+		// kijken naar errormanagement. Wat als malloc wel lukt, maar mutex niet. Of gedeelte van mutex
 		i++;
 	}
 	return (true);
