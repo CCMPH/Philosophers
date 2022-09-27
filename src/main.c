@@ -18,7 +18,7 @@ void	check_leaks(void)
 	system("leaks -q a.out");
 }
 
-static bool	init_data(t_data *data, char **av)
+void	philo_print(t_philo *philo, char *str)
 {
 	unsigned long	time;
 
