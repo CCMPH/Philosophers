@@ -6,53 +6,54 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:21:54 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/07 10:37:36 by chartema      ########   odam.nl         */
+/*   Updated: 2022/09/29 13:18:34 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-#include <stdlib.h> //nodig voor exit_failure
-#include <stdio.h> //nodig voor printf
-#include <stdbool.h> //nodig voor bool
-#include <limits.h> //nodig voor int_MAX
-#include <pthread.h> //nodig voor pthread functies
-#include <sys/time.h> //nodig voor gettimeofday
-#include <unistd.h> //nodig voor usleep
+# include <stdlib.h> //nodig voor exit_failure
+# include <stdio.h> //nodig voor printf
+# include <stdbool.h> //nodig voor bool
+# include <limits.h> //nodig voor int_MAX
+# include <pthread.h> //nodig voor pthread functies
+# include <sys/time.h> //nodig voor gettimeofday
+# include <unistd.h> //nodig voor usleep
 
 
 # define MAX_PHILOS	200
+
 typedef struct s_philo	t_philo;
 typedef struct s_data	t_data;
 
 struct s_data {
-int				nr_philos;
-int				time_to_die;
-int				time_to_eat;
-int				time_to_sleep;
-int				times_must_eat;
-int				philos_done_eating;
-long			start_time;
-bool			dead;
+	int				nr_philos;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				times_must_eat;
+	int				philos_done_eating;
+	long			start_time;
+	bool			dead;
+	pthread_t		*threads;
 
-pthread_mutex_t	*forks;
-pthread_mutex_t	lock_write;
-pthread_mutex_t	lock_check_dead;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	lock_write;
+	pthread_mutex_t	lock_dead;
 
-t_philo			*philo;
+	t_philo			*philo;
 };
 
 struct s_philo {
-t_data*			data;
-int				philo_id;
-int				times_eaten;
-long			time_last_meal;
-bool			done_eating;
-int				fork_left;
-int				fork_right;
-pthread_mutex_t lock_eating;
-
+	t_data			*data;
+	int				philo_id;
+	int				times_eaten;
+	long			time_last_meal;
+	bool			done_eating;
+	int				fork_left;
+	int				fork_right;
+	pthread_mutex_t	lock_eating;
 };
 
 

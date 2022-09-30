@@ -6,13 +6,13 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:16:04 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/07 10:25:18 by chartema      ########   odam.nl         */
+/*   Updated: 2022/09/29 12:57:18 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-static bool is_input_a_digit(char *str)
+static bool	is_input_a_digit(char *str)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ static bool is_input_a_digit(char *str)
 	return (true);
 }
 
-bool is_input_valid(int ac, char **av)
+bool	is_input_valid(int ac, char **av)
 {
 	int	i;
 	int	nb;

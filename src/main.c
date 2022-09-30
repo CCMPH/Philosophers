@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 10:05:08 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/07 14:27:22 by chartema      ########   odam.nl         */
+/*   Updated: 2022/09/29 15:25:53 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ void	philo_print(t_philo *philo, char *str)
 
 bool	check_dead(t_data *data)
 {
-	pthread_mutex_lock(&(data->lock_check_dead));
+	//Ik gebruik hier lock_dead, die ik gebruik ik ook in monitor. Kan dit?
+	pthread_mutex_lock(&(data->lock_dead));
 	if (data->dead == true)
 	{
-		pthread_mutex_unlock(&(data->lock_check_dead));
+		pthread_mutex_unlock(&(data->lock_dead));
 		return (true);
 	}
-	pthread_mutex_unlock(&(data->lock_check_dead));
+	pthread_mutex_unlock(&(data->lock_dead));
 	return (false);
 }
 
@@ -52,8 +53,14 @@ void	time_action(unsigned long time_action)
 
 bool	pick_up_forks(t_philo *philo, int left_fork, int right_fork)
 {
-	if (left_fork == right_fork)
-		return (false);
+	if (philo->philo_id == 1)
+	{
+		pthread_mutex_lock(&(philo->data->forks[left_fork]));
+		philo_print(philo, "Picking up fork\n");
+		pthread_mutex_lock(&(philo->data->forks[right_fork]));
+		philo_print(philo, "Picking up fork\n");
+		return (true);
+	}
 	pthread_mutex_lock(&(philo->data->forks[right_fork]));
 	if (check_dead(philo->data) == true)
 	{
@@ -78,16 +85,17 @@ void	philo_eat(t_philo *philo)
 		return ;
 	pthread_mutex_lock(&(philo->lock_eating));
 	philo_print(philo, "Eating");
-	philo->times_eaten++;
 	philo->time_last_meal = get_time();
-	pthread_mutex_unlock(&(philo->lock_eating));
 	time_action(philo->data->time_to_eat);
+	philo->times_eaten++;
+	pthread_mutex_unlock(&(philo->lock_eating));
 	pthread_mutex_unlock(&(philo->data->forks[philo->fork_right]));
 	pthread_mutex_unlock(&(philo->data->forks[philo->fork_left]));
 }
 
 bool	check_done(t_data *data, t_philo *philo)
 {
+	//times_eaten moet een lock omheen.
 	if (philo->times_eaten > 0 && philo->times_eaten == data->times_must_eat)
 	{
 		data->philos_done_eating++;
@@ -110,9 +118,9 @@ void *philosopher(void *info)
 
 	philo = (t_philo *)info;
 	if (philo->philo_id % 2)
-		usleep(500);
+		usleep(200);
 	// usleep 500 - kijken of hier iets anders voor verzonnen moet worden. 
-	while (philo->data->dead != true && philo->times_eaten != philo->data->times_must_eat))
+	while (1)
 	{
 		philo_print(philo, "is thinking");
 		if (check_dead(philo->data) == true)
@@ -120,8 +128,8 @@ void *philosopher(void *info)
 		philo_eat(philo);
 		if (check_dead(philo->data) == true)
 			break ;
-		if (check_done(philo->data, philo) == true)
-			break;
+		//if (check_done(philo->data, philo) == true)
+		//	break ;
 		philo_sleep(philo);
 	}
 	return (0);
@@ -129,32 +137,66 @@ void *philosopher(void *info)
 
 bool	create_philo_pthread(t_data *data)
 {
-	pthread_t	*threads;
 	int			i;
 
 	i = 0;
-	threads = malloc(sizeof(pthread_t) * data->nr_philos);
-	if (!threads)
+	data->threads = malloc(sizeof(pthread_t) * data->nr_philos);
+	if (!data->threads)
 		return (false);
 	while (i < data->nr_philos)
 	{
-		if (pthread_create(&threads[i], NULL, philosopher, &data->philo[i]))
-		return (false);
+		if (pthread_create(&data->threads[i], NULL, philosopher, &data->philo[i]))
+			return (false);
+		// errormanagement, check in functie philosopher of alles is gelukt
 		i++;
 	}
 	return (true);
+}
+
+void	monitoring(t_data *data)
+{
+	int		i;
+	long	time;
+
+	i = 0;
+	while (i < data->nr_philos)
+	{
+		time = get_time();
+		if (time - data->philo[i].time_last_meal >= data->time_to_die)
+		{
+			pthread_mutex_lock(&data->lock_dead);
+			data->dead = true;
+			philo_print(data->philo, "died");
+			pthread_mutex_unlock(&data->lock_dead);
+			break ;
+		}
+		i++;
+		if (i == data->nr_philos)
+			i = 0;
+	}
+}
+
+void	join_threads(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nr_philos)
+	{
+		pthread_join(data->threads[i], NULL);
+		i++;
+	}
 }
 
 int	start_simulation(t_data *data)
 {
 	if (!create_philo_pthread(data))
 		return(EXIT_FAILURE);
-		//return(error_free_all()) ook free treads vanaf hier //nog naar kijken
-	
-	// HIER VERDERRR
-	//create monitoring
-	// join
-	
+	//return(error_free_all()) ook free treads vanaf hier //nog naar kijken
+	monitoring(data);
+	join_threads(data);
+	//cleanup
+	return (0);
 }
 
 int main(int ac, char **av)
@@ -177,3 +219,6 @@ int main(int ac, char **av)
 // to do:
 //
 // -*- op school kijken naar headerfiles 
+// -*- iets voor 1 philo
+// -*- errormanagement
+// -*- cleanup
