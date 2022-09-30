@@ -6,7 +6,7 @@
 #    By: chartema <chartema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/09/07 10:59:05 by chartema      #+#    #+#                  #
-#    Updated: 2022/09/07 14:33:30 by chartema      ########   odam.nl          #
+#    Updated: 2022/09/30 09:33:36 by chartema      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread
 
 INC = -I ./include
 
-SRC_FILES = main.c check_input.c error.c initialize.c utils.c
+SRC_FILES = actions.c check_input.c error.c initialize.c main.c monitoring.c philosopher.c utils.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 
 OBJS = $(addprefix obj/, $(OBJ_FILES))

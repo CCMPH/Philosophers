@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:16:04 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/29 12:57:18 by chartema      ########   odam.nl         */
+/*   Updated: 2022/09/30 13:44:49 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,18 @@ bool	is_input_valid(int ac, char **av)
 	int	nb;
 
 	i = 1;
+	// kijken naar error_msg
 	while (i < ac)
 	{
 		if (!is_input_a_digit(av[i]))
-			return (error_msg("Input contains not only digits.", EXIT_FAILURE));
+			return (error_msg("Input contains not only digits.", EXIT_FAILURE),false);
 		nb = convert_str_to_int(av[i]);
 		if (i == 1 && (nb <= 0 || nb > MAX_PHILOS))
-			return (error_msg("There must be between 1 and 200 philosophers.", EXIT_FAILURE));
+			return (error_msg("There must be between 1 and 200 philosophers.", EXIT_FAILURE), false);
 		if (i != 1 && nb == 0)
-			return (error_msg("Arguments can't be zero.", EXIT_FAILURE));
+			return (error_msg("Arguments can't be zero.", EXIT_FAILURE), false);
 		if (i != 1 && nb == -1)
-			return (error_msg("Arguments can't be bigger than MAX_INT.", EXIT_FAILURE));
+			return (error_msg("Arguments can't be bigger than MAX_INT.", EXIT_FAILURE), false);
 		i++;
 	}
 	return (true);

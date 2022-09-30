@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:34:43 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/29 13:33:24 by chartema      ########   odam.nl         */
+/*   Updated: 2022/09/30 13:53:26 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static bool	init_philosopher(t_data *data)
 		data->philo[i].data = data;
 		data->philo[i].times_eaten = 0;
 		data->philo[i].time_last_meal = get_time();
-		// kijk voor forks even naar code casper
 		asign_forks(&data->philo[i]);
 		if (pthread_mutex_init(&data->philo[i].lock_eating, NULL))
 			return (false);
@@ -94,6 +93,7 @@ int	initialize(t_data *data, char **av)
 	if (!init_data(data, av))
 		return (error_msg("Something went wrong with initializing data."
 				, EXIT_FAILURE));
+	//errormessage
 	if (!init_philosopher(data))
 		return (error_msg("Something went wrong with initializing philosopher."
 				, EXIT_FAILURE));

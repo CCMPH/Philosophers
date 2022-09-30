@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:21:54 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/29 13:18:34 by chartema      ########   odam.nl         */
+/*   Updated: 2022/09/30 11:51:09 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,33 @@ struct s_philo {
 	pthread_mutex_t	lock_eating;
 };
 
-
 // CHECK INPUT //
 bool	is_input_valid(int ac, char **av);
 
 // INITIALIZE //
-int	initialize(t_data *data, char **av);
+int		initialize(t_data *data, char **av);
+
+// SIMULATION //
+int		start_simulation(t_data *data);
+
+// ACTIONS //
+void	philo_sleep(t_philo *philo);
+void	philo_eat(t_philo *philo);
+
+// MONITORING //
+bool	check_dead(t_data *data);
+void	monitoring(t_data *data);
 
 // ERROR //
-int	error_msg(char *str, int exit_nr);
-int	error_free_data(t_data *data);
+int		error_msg(char *str, int exit_nr);
+int		error_free_data(t_data *data);
 bool	destroy_mutex_forks(t_data *data, int index, bool info);
 bool	destroy_mutex_write_and_fork(t_data *data, int index, bool info);
 
 // UTILS //
-int	convert_str_to_int(char *str);
+int		convert_str_to_int(char *str);
 long	get_time(void);
+void	philo_print(t_philo *philo, char *str);
+void	join_threads(t_data *data);
 
 #endif
