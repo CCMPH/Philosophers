@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:18:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/30 11:05:08 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/03 14:35:54 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,11 @@ void	philo_print(t_philo *philo, char *str)
 	pthread_mutex_unlock(&philo->data->lock_write);
 }
 
-void	join_threads(t_data *data)
+void	join_threads(t_data *data, int i)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->nr_philos)
+	while (i > 0)
 	{
+		i--;
 		pthread_join(data->threads[i], NULL);
-		i++;
 	}
 }

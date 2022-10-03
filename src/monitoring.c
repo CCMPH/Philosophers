@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:30:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/30 14:20:23 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/03 14:26:11 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	monitoring(t_data *data)
 {
 	int	i;
 
-	//while (check_dead(data) == false)
 	while (true)
 	{
 		i = 0;

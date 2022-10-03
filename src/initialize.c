@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:34:43 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/30 13:53:26 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/03 14:46:11 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static bool	init_data(t_data *data, char **av)
 	if (av[5])
 		data->times_must_eat = convert_str_to_int(av[5]);
 	data->philos_done_eating = 0;
-	data->start_time = get_time();
+	data->start_time = get_time() + 200;
 	data->dead = false;
 	return (true);
 }
@@ -58,8 +58,7 @@ static bool	init_philosopher(t_data *data)
 		data->philo[i].time_last_meal = get_time();
 		asign_forks(&data->philo[i]);
 		if (pthread_mutex_init(&data->philo[i].lock_eating, NULL))
-			return (false);
-		// kijken naar errormanagement. Wat als malloc wel lukt, maar mutex niet. Of gedeelte van mutex
+			return (destroy_mutex_philo(data, i), false);
 		i++;
 	}
 	return (true);
@@ -78,26 +77,26 @@ static bool	init_mutexes(t_data *data)
 	while (i < data->nr_philos)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL))
-			return (destroy_mutex_forks(data, i, false));
+			return (destroy_mutex_forks(data, i), false);
 		i++;
 	}
 	if (pthread_mutex_init(&data->lock_write, NULL))
-		return (destroy_mutex_forks(data, i, false));
+		return (destroy_mutex_forks(data, i), false);
 	if (pthread_mutex_init(&data->lock_dead, NULL))
-		return (destroy_mutex_write_and_fork(data, i, false));
+		return (destroy_mutex_write_and_fork(data, i), false);
 	return (true);
 }
 
-int	initialize(t_data *data, char **av)
+bool	initialize(t_data *data, char **av)
 {
-	if (!init_data(data, av))
-		return (error_msg("Something went wrong with initializing data."
-				, EXIT_FAILURE));
-	//errormessage
-	if (!init_philosopher(data))
-		return (error_msg("Something went wrong with initializing philosopher."
-				, EXIT_FAILURE));
-	if (!init_mutexes(data))
-		return (error_free_data(data));
-	return (0);
+	if (init_data(data, av) == false)
+		return (printf("%s\n", ERR_DATA), false);
+	if (init_philosopher(data) == false)
+		return (printf("%s\n", ERR_PHILO), false);
+	if (init_mutexes(data) == false)
+	{
+		free_data(data);
+		return (printf("%s\n", ERR_MUTEX), false);
+	}
+	return (true);
 }

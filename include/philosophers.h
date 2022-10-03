@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:21:54 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/30 11:51:09 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/03 15:08:03 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,15 @@
 # include <sys/time.h> //nodig voor gettimeofday
 # include <unistd.h> //nodig voor usleep
 
-
 # define MAX_PHILOS	200
+# define ERR_ARG		"Error: Wrong amount of arguments."
+# define ERR_DIGIT		"Error: Input contains not only digits."
+# define ERR_PHILONR	"Error: There must be between 1 and 200 philosophers."
+# define ERR_ZERO		"Error: Arguments can't be zero."
+# define ERR_MAXINT		"Error: Arguments can't be bigger than MAX_INT."
+# define ERR_DATA		"Error: Something went wrong initializing data."
+# define ERR_PHILO		"Error: Something went wrong initializing philosopher."
+# define ERR_MUTEX		"Error: Something went wrong initializing mutexes."
 
 typedef struct s_philo	t_philo;
 typedef struct s_data	t_data;
@@ -60,29 +67,31 @@ struct s_philo {
 bool	is_input_valid(int ac, char **av);
 
 // INITIALIZE //
-int		initialize(t_data *data, char **av);
+bool	initialize(t_data *data, char **av);
 
 // SIMULATION //
-int		start_simulation(t_data *data);
+bool	simulation(t_data *data);
 
 // ACTIONS //
 void	philo_sleep(t_philo *philo);
 void	philo_eat(t_philo *philo);
+void	philo_think(t_philo *philo);
 
 // MONITORING //
 bool	check_dead(t_data *data);
 void	monitoring(t_data *data);
 
 // ERROR //
-int		error_msg(char *str, int exit_nr);
-int		error_free_data(t_data *data);
-bool	destroy_mutex_forks(t_data *data, int index, bool info);
-bool	destroy_mutex_write_and_fork(t_data *data, int index, bool info);
+void	free_data(t_data *data);
+void	destroy_mutex_philo(t_data *data, int index);
+void	destroy_mutex_forks(t_data *data, int index);
+void	destroy_mutex_write_and_fork(t_data *data, int index);
+void	destroy_mutex_all(t_data *data, int index);
 
 // UTILS //
 int		convert_str_to_int(char *str);
 long	get_time(void);
 void	philo_print(t_philo *philo, char *str);
-void	join_threads(t_data *data);
+void	join_threads(t_data *data, int i);
 
 #endif

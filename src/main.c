@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 10:05:08 by chartema      #+#    #+#                 */
-/*   Updated: 2022/09/30 13:44:12 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/03 14:16:09 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,14 @@ int	main(int ac, char **av)
 
 	//atexit(check_leaks);
 	if (ac < 5 || ac > 6)
-		return (error_msg("Wrong amount of arguments", EXIT_FAILURE), EXIT_FAILURE);
-	//kijken naar error_msg functie
+		return (printf("%s\n", ERR_ARG), EXIT_FAILURE);
 	if (is_input_valid(ac, av) == false)
 		return (EXIT_FAILURE);
-	if (initialize(&data, av))
+	if (initialize(&data, av) == false)
 		return (EXIT_FAILURE);
-	if (start_simulation(&data))
+	if (simulation(&data) == false)
 		return (EXIT_FAILURE);
-	printf("succes\n");
+	return (EXIT_SUCCESS);
 }
 
 // to do:
