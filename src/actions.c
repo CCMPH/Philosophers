@@ -6,23 +6,21 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:28:34 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 15:06:59 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 11:38:12 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include "philosophers.h"
 #include "../include/philosophers.h"
 
-void	time_action(unsigned long time_action, t_data *data)
+void	one_philo(t_philo *philo)
 {
-	unsigned long	start;
-
-	start = get_time();
-	while (get_time() - start < time_action)
+	philo_print(philo, "has taken a fork");
+	while (true)
 	{
-		if (check_dead(data) == true)
+		if (check_dead(philo->data) == true)
 			return ;
-		usleep(200);
+		usleep(250);
 	}
 }
 
@@ -65,6 +63,19 @@ void	philo_eat(t_philo *philo)
 
 void	philo_think(t_philo *philo)
 {
+	long	time_think;
+	long	time_last_meal;
+
+	pthread_mutex_lock(&philo->lock_eating);
+	time_last_meal = philo->time_last_meal;
+	pthread_mutex_unlock(&philo->lock_eating);
+	time_think = (philo->data->time_to_die
+			- (get_time() - time_last_meal)
+			- philo->data->time_to_eat) / 2;
+	if (time_think > 1000)
+		time_think = 500;
+	if (time_think < 0)
+		time_think = 0;
 	philo_print(philo, "is thinking");
-	usleep(200);
+	time_action(time_think, philo->data);
 }

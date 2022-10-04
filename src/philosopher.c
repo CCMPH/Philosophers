@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:25:56 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 15:09:39 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 14:27:56 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ static void	*philosopher(void *info)
 	t_philo	*philo;
 
 	philo = (t_philo *)info;
-	while (philo->data->start_time > get_time())
-		continue ;
-	// if (philo->data->nr_philos == 1)
-	// 	return (one_philo());
+	if (philo->data->nr_philos == 1)
+		return (one_philo(philo), NULL);
 	if (philo->philo_id % 2)
 		philo_think(philo);
 	while (true)
@@ -33,6 +31,7 @@ static void	*philosopher(void *info)
 			break ;
 		philo_sleep(philo);
 		philo_think(philo);
+		usleep(250);
 	}
 	return (0);
 }
@@ -45,7 +44,6 @@ bool	simulation(t_data *data)
 	data->threads = malloc(sizeof(pthread_t) * data->nr_philos);
 	while (i < data->nr_philos && data->threads)
 	{
-
 		if (pthread_create(&data->threads[i], NULL, philosopher,
 				&data->philo[i]))
 			break ;

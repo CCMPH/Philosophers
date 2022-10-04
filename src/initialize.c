@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:34:43 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 14:46:11 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 13:13:45 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static bool	init_data(t_data *data, char **av)
 	if (av[5])
 		data->times_must_eat = convert_str_to_int(av[5]);
 	data->philos_done_eating = 0;
-	data->start_time = get_time() + 200;
+	data->start_time = get_time();
 	data->dead = false;
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:18:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 14:35:54 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 14:31:36 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,21 @@ long	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-//kijken naar de printfunctie!
+//bool van maken - waterval
+void	time_action(unsigned long time_action, t_data *data)
+{
+	unsigned long	start;
 
+	start = get_time();
+	while (get_time() - start < time_action)
+	{
+		if (check_dead(data) == true)
+			return ;
+		usleep(200);
+	}
+}
+
+//bool van maken - waterval
 void	philo_print(t_philo *philo, char *str)
 {
 	unsigned long	time;
@@ -47,7 +60,7 @@ void	philo_print(t_philo *philo, char *str)
 	if (check_dead(philo->data) == false)
 	{
 		time = get_time();
-		printf("%ld %d %s\n", time - philo->data->start_time, philo->philo_id, str);
+		printf("%ld %d %s\n", time - (philo->data->start_time), philo->philo_id, str);
 	}
 	pthread_mutex_unlock(&philo->data->lock_write);
 }

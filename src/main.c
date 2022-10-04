@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 10:05:08 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 14:16:09 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 10:57:59 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,3 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
-
-// to do:
-//
-// -*- op school kijken naar headerfiles 
-// -*- iets voor 1 philo
-// -*- errormanagement
-// -*- cleanup
