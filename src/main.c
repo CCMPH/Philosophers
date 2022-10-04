@@ -6,23 +6,23 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 10:05:08 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 10:57:59 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 16:41:24 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include "philosophers.h"
 #include "../include/philosophers.h"
 
-void	check_leaks(void)
-{
-	system("leaks -q a.out");
-}
+// void	check_leaks(void)
+// {
+// 	system("leaks -q a.out");
+// }
+//atexit(check_leaks);
 
 int	main(int ac, char **av)
 {
 	t_data	data;
 
-	//atexit(check_leaks);
 	if (ac < 5 || ac > 6)
 		return (printf("%s\n", ERR_ARG), EXIT_FAILURE);
 	if (is_input_valid(ac, av) == false)

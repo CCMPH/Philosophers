@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:25:56 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 14:27:56 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 16:25:51 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static void	*philosopher(void *info)
 	{
 		if (check_dead(philo->data) == true)
 			break ;
-		philo_eat(philo);
-		if (check_dead(philo->data) == true)
+		if (!philo_eat(philo))
 			break ;
-		philo_sleep(philo);
-		philo_think(philo);
-		usleep(250);
+		if (!philo_sleep(philo))
+			break ;
+		if (!philo_think(philo))
+			break ;
 	}
 	return (0);
 }

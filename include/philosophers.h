@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:21:54 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 10:56:58 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 15:06:16 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ bool	simulation(t_data *data);
 
 // ACTIONS //
 void	one_philo(t_philo *philo);
-void	philo_sleep(t_philo *philo);
-void	philo_eat(t_philo *philo);
-void	philo_think(t_philo *philo);
+bool	philo_sleep(t_philo *philo);
+bool	philo_eat(t_philo *philo);
+bool	philo_think(t_philo *philo);
 
 // MONITORING //
 bool	check_dead(t_data *data);
@@ -93,7 +93,7 @@ void	destroy_mutex_all(t_data *data, int index);
 int		convert_str_to_int(char *str);
 long	get_time(void);
 void	time_action(unsigned long time_action, t_data *data);
-void	philo_print(t_philo *philo, char *str);
+bool	philo_print(t_philo *philo, char *str);
 void	join_threads(t_data *data, int i);
 
 #endif

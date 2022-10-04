@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:18:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 14:31:36 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 16:39:44 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,21 @@ void	time_action(unsigned long time_action, t_data *data)
 	}
 }
 
-//bool van maken - waterval
-void	philo_print(t_philo *philo, char *str)
+bool	philo_print(t_philo *philo, char *str)
 {
 	unsigned long	time;
 
 	pthread_mutex_lock(&philo->data->lock_write);
-	if (check_dead(philo->data) == false)
+	if (check_dead(philo->data) == true)
 	{
-		time = get_time();
-		printf("%ld %d %s\n", time - (philo->data->start_time), philo->philo_id, str);
+		pthread_mutex_unlock(&philo->data->lock_write);
+		return (false);
 	}
+	time = get_time();
+	printf("%ld %d %s\n", time - (philo->data->start_time),
+		philo->philo_id, str);
 	pthread_mutex_unlock(&philo->data->lock_write);
+	return (true);
 }
 
 void	join_threads(t_data *data, int i)

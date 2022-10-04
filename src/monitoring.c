@@ -6,7 +6,7 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:30:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 14:31:53 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/04 16:21:10 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static bool	check_ate_enough(t_data *data, t_philo *philo)
 	pthread_mutex_lock(&philo->lock_eating);
 	if (philo->times_eaten >= data->times_must_eat)
 	{
-		// printf("philo id: %d times eaten?%d\n", philo->philo_id, philo->times_eaten);
 		pthread_mutex_unlock(&philo->lock_eating);
 		return (true);
 	}
@@ -64,10 +63,9 @@ void	monitoring(t_data *data)
 	while (true)
 	{
 		i = 0;
-		data->philo->done_eating = 0;
+		data->philos_done_eating = 0;
 		while (i < data->nr_philos)
 		{
-			printf("philo id: %d times eaten?%d\n", data->philo[i].philo_id, data->philo[i].times_eaten);
 			if (check_ate_enough(data, &data->philo[i]) == true)
 				data->philos_done_eating++;
 			if (check_if_died(data, &data->philo[i]) == true)
@@ -75,7 +73,8 @@ void	monitoring(t_data *data)
 			usleep(250);
 			i++;
 		}
-		if (data->times_must_eat != -1 && data->philos_done_eating == data->nr_philos)
+		if (data->times_must_eat != -1
+			&& data->philos_done_eating == data->nr_philos)
 		{
 			pthread_mutex_lock(&data->lock_dead);
 			data->dead = true;
