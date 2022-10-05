@@ -6,16 +6,15 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/23 10:05:08 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 16:41:24 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:07:44 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "philosophers.h"
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 // void	check_leaks(void)
 // {
-// 	system("leaks -q a.out");
+// 	system("leaks -q philo");
 // }
 //atexit(check_leaks);
 

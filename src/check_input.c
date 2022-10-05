@@ -6,11 +6,11 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:16:04 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 10:45:08 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:02:24 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 static bool	is_input_a_digit(char *str)
 {

@@ -6,11 +6,11 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:34:43 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 13:13:45 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:02:24 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 static bool	init_data(t_data *data, char **av)
 {

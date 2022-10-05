@@ -6,12 +6,11 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:30:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 16:21:10 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:02:57 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "philosophers.h"
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 bool	check_dead(t_data *data)
 {

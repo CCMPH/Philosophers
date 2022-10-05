@@ -6,11 +6,11 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:17:02 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/03 14:19:27 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:02:24 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 void	free_data(t_data *data)
 {

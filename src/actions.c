@@ -6,12 +6,11 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/30 09:28:34 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 16:31:28 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:02:46 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "philosophers.h"
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 void	one_philo(t_philo *philo)
 {

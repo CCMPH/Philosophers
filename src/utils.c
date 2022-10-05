@@ -6,11 +6,11 @@
 /*   By: chartema <chartema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/07 10:18:49 by chartema      #+#    #+#                 */
-/*   Updated: 2022/10/04 16:39:44 by chartema      ########   odam.nl         */
+/*   Updated: 2022/10/05 09:02:24 by chartema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 int	convert_str_to_int(char *str)
 {
@@ -37,7 +37,6 @@ long	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-//bool van maken - waterval
 void	time_action(unsigned long time_action, t_data *data)
 {
 	unsigned long	start;
